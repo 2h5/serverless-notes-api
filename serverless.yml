@@ -1,0 +1,63 @@
+service: notes-api
+
+provider:
+  name: aws
+  runtime: python3.11
+  region: us-east-1
+  environment:
+    TABLE_NAME: table
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+        - dynamodb:GetItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:Scan
+      Resource:
+        - arn:aws:dynamodb:us-east-1:*:table/table
+
+functions:
+  healthcheck:
+    handler: src/get_note.handler
+    events:
+      - http:
+          path: health
+          method: get
+
+  create_note:
+    handler: src/create_note.handler
+    events:
+      - http:
+          path: notes
+          method: post
+
+  get_note:
+    handler: src/get_note.handler
+    events:
+      - http:
+          path: notes/{id}
+          method: get
+
+  delete_note:
+    handler: src/delete_note.handler
+    events:
+      - http:
+          path: notes/{id}
+          method: delete
+
+
+resources:
+  Resources:
+    NotesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: table
+        AttributeDefinitions:
+          - AttributeName: noteId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: noteId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
