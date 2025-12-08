@@ -19,11 +19,11 @@ provider:
         - arn:aws:dynamodb:us-east-1:*:table/table
 
 functions:
-  healthcheck:
-    handler: src/get_note.handler
+  list_notes:
+    handler: src/list_notes.handler
     events:
       - http:
-          path: health
+          path: notes
           method: get
 
   create_note:
