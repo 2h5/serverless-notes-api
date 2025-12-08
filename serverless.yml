@@ -47,6 +47,14 @@ functions:
           path: notes/{id}
           method: delete
 
+  update_note:
+    handler: src/update_note.handler
+    events:
+      - http:
+          path: notes/{id}
+          method: PUT
+          
+
 
 resources:
   Resources:
