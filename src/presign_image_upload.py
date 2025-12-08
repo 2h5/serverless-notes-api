@@ -32,7 +32,7 @@ def handler(event, context):
     if not extension:
         return {
             "statusCode": 400,
-            "body": json.dumps({"message": f"Unsupported or unknown content type: {content_type}"})
+            "body": json.dumps({"message": f"Unsupported content type: {content_type}"})
         }
         
     
