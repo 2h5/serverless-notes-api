@@ -6,6 +6,7 @@ provider:
   region: us-east-1
   environment:
     TABLE_NAME: table
+    IMAGE_BUCKET: notes-app-images-patrick-hwang
 
   iamRoleStatements:
     - Effect: Allow
@@ -17,6 +18,13 @@ provider:
         - dynamodb:Scan
       Resource:
         - arn:aws:dynamodb:us-east-1:*:table/table
+
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:GetObject
+      Resource:
+        - arn:aws:s3:::notes-app-images-patrick-hwang/*
 
 functions:
   list_notes:
@@ -53,6 +61,13 @@ functions:
       - http:
           path: notes/{id}
           method: PUT
+          
+  presign_image_upload:
+    handler: src/presign_image_upload.handler
+    events:
+      - http:
+          path: notes/{id}/images/presign
+          method: post
           
 
 

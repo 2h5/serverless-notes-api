@@ -31,10 +31,7 @@ def handler(event, context):
         "createdAt": datetime.utcnow().isoformat()
     }
 
-    
-    
     table.put_item(Item=item)
-
     
     return {
             "statusCode": 201, 

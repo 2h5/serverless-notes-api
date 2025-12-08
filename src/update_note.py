@@ -9,8 +9,6 @@ dynamodb = boto3.resource("dynamodb")
 table = dynamodb.Table(os.environ["TABLE_NAME"])
 
 def handler(event, context):
-    #we are going to do full overwrite, just replace the entire note completely
-    
     if not event["pathParameters"].get("id"):
 
         return {
@@ -48,8 +46,11 @@ def handler(event, context):
         "content": note["content"],
         "createdAt": piece['Item']['createdAt'],
         "updatedAt": now
-        
     }
+    
+    if "attachment" in note:
+        item["attachment"] = note["attachment"]
+        
     table.put_item(Item=item)
     
     return {
@@ -57,6 +58,7 @@ def handler(event, context):
             "body": json.dumps({"noteId": data,
                                 "title": note["title"],
                                 "content": note["content"],
+                                "attachment": item.get("attachment"),
                                 "createdAt": piece['Item']['createdAt'],
                                 "updatedAt": now,
                                 "message": "Note Updated"})

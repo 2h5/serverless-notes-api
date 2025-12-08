@@ -9,7 +9,7 @@ table = dynamodb.Table(os.environ["TABLE_NAME"])
 
 
 def handler(event, context):
-    #safe check for id
+    
     if not event["pathParameters"].get("id"):
 
         return {
